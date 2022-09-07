@@ -121,6 +121,9 @@ public class AppDisplayController {
 			} else if (pressedButtonText.equals("Undo")) {
 				Object poppedObj = chooseShapeStack().pop();
 				redoStack.add(poppedObj);
+				if(poppedObj instanceof Shape){
+					view.removeSwingComponents((Shape)poppedObj);
+				}
 				view.repaint();
 				SwingUtilities.updateComponentTreeUI(view);
 			} else if (pressedButtonText.equals("Redo")) {
@@ -129,6 +132,13 @@ public class AppDisplayController {
 				view.repaint();
 				SwingUtilities.updateComponentTreeUI(view);
 			}
+			else if(pressedButtonText.equals("Clear Screen")){
+				Stack shapeStack = chooseShapeStack();
+				shapeStack.clear();
+				view.repaint();
+				view.removeAll();
+			}
+
 		}
 
  public boolean isEndShapeValid(Shape startShape, Shape endShape){
@@ -261,18 +271,19 @@ public class AppDisplayController {
 			 AbstractNodeRectangle rectangle = new AbstractNodeRectangle(view.getX_clicked(), view.getY_clicked(), pressedButtonText);
 			 view.drawShape(g, rectangle);
 			 deploymentViewStack.add(rectangle);
+		 }
+		 else if(view.getIsMouseClicked() && pressedButtonText.equals("Delete Shape")){
+				 Stack shapeStack = chooseShapeStack();
+				 Shape clickedShape = AppDisplayController.findEnclosingShape(shapeStack, view.getX_clicked(), view.getY_clicked());
+				 shapeStack.remove(clickedShape);
+				 view.removeSwingComponents(clickedShape);
+				 view.repaint();
 
-
+				 }
+			 }
 		 }
 
 
-
-
-
-
-
-	 }
- }
  /**
  *this method checks each object of shapeStack 
  *and paints it accordingly.
@@ -390,67 +401,16 @@ public class AppDisplayController {
 	   }
 	   return isEndShapeValid;
    }
-    public Object findClickedShape(int x_clicked, int y_clicked) {
-		for(Object o : shapeStack) {
-			if(o instanceof NodeRectangle) {
-				NodeRectangle rect = (NodeRectangle)o;
-				NodeRectangle clickedRectangle = checkInsideRectangle(rect, x_clicked, y_clicked);
-				if(clickedRectangle != null) {
-					return clickedRectangle;
-				}
-
-			}
-			if(o instanceof SoftwareComponent) {
-				SoftwareComponent t = (SoftwareComponent) o;
-				SoftwareComponent clickedTriangle = checkInsideTriangle(t, x_clicked, y_clicked);
-				if(clickedTriangle != null) {
-					return clickedTriangle;
-				}
-
-			}
 
 
 
-		}
-		return null;
-	}
 
 
 
-	public NodeRectangle checkInsideRectangle(NodeRectangle rect, int x_clicked, int y_clicked) {
-		if(x_clicked <= rect.getX_clicked() + 250 && x_clicked >= rect.getX_clicked() && y_clicked >= rect.getY_clicked() && y_clicked <= rect.getY_clicked() + 150) {
-			return rect;
-		}
-		return null;
-	}
 
-	public SoftwareComponent checkInsideTriangle(SoftwareComponent t, int x_clicked, int y_clicked){
-		int[] x_vertices = t.getX_points();
-		int[] y_vertices = t.getY_points();
 
-		Point p0 = new Point(x_clicked, y_clicked);
-		Point p1 = new Point(x_vertices[0], y_vertices[0]);
-		Point p2 = new Point(x_vertices[1], y_vertices[1]);
-		Point p3 = new Point(x_vertices[2], y_vertices[2]);
 
-		if(isInside(p1, p2, p3, p0)) {
-			return t;
-		}
-		return null;
-	}
 
-	private boolean isInside(Point p1, Point p2, Point p3, Point p) {     //check whether p is inside or outside
-		double area = triangleArea (p1, p2, p3);          //area of triangle ABC
-		double area1 = triangleArea (p, p2, p3);         //area of PBC
-		double area2 = triangleArea (p1, p, p3);         //area of APC
-		double area3 = triangleArea (p1, p2, p);        //area of ABP
-
-		return (area == area1 + area2 + area3);        //when three triangles are forming the whole triangle
-	}
-
-	private double triangleArea(Point p1, Point p2, Point p3) {         //find area of triangle formed by p1, p2 and p3
-		return Math.abs((p1.x*(p2.y - p3.y) + p2.x*(p3.y - p1.y)+ p3.x*(p1.y - p2.y))/2.0);
-	}
 
 	public String getPressedButtonText() {
 		return pressedButtonText;
@@ -472,4 +432,54 @@ public class AppDisplayController {
 	private static double getTriangleArea(Point p1, Point p2, Point p3) { // find area of triangle formed by p1, p2 and p3
 		return Math.abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0);
 	}
+
+	public static Shape findEnclosingShape(Stack shapeStack, int x_coord, int y_coord) {
+
+		for (Object o : shapeStack) {
+			if (o instanceof ParentRectangle) {
+				ParentRectangle rect = (ParentRectangle)o;
+				if (isInsideRectangle(x_coord, y_coord, rect)) {
+					return rect;
+				}
+			}
+
+			if (o instanceof SoftwareComponent) {
+				SoftwareComponent t = (SoftwareComponent) o;
+				int[] x_vertices = t.getX_points();
+				int[] y_vertices = t.getY_points();
+
+				Point p0 = new Point(x_coord, y_coord);
+				Point p1 = new Point(x_vertices[0], y_vertices[0]);
+				Point p2 = new Point(x_vertices[1], y_vertices[1]);
+				Point p3 = new Point(x_vertices[2], y_vertices[2]);
+
+				if (AppDisplayController.isInsideTriangle(p1, p2, p3, p0)) {
+					return t;
+				}
+			}
+
+			if (o instanceof ParentCircle) {
+				ParentCircle circ = (ParentCircle) o;
+				if (isInsideCircle(x_coord, y_coord, circ)) {
+					return circ;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static boolean isInsideRectangle(int x_coord, int y_coord, ParentRectangle rect) {
+		return x_coord <= rect.x_clicked + rect.width &&
+				x_coord >= rect.x_clicked &&
+				y_coord >= rect.y_clicked &&
+				y_coord <= rect.y_clicked + rect.height;
+	}
+
+	public static boolean isInsideCircle(int x_coord, int y_coord, ParentCircle circ) {
+		double distanceSquare = Math.pow(x_coord - circ.x_center,2) + Math.pow(y_coord - circ.y_center, 2);
+		double radiusSquare = Math.pow(circ.diameter / 2.0, 2);
+
+		return distanceSquare <= radiusSquare;
+	}
 }
+

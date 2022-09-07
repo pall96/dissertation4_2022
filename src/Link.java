@@ -67,8 +67,8 @@ public class Link {
         this.arrowThickness = arrowThickness;
         this.shapeStack = controller.chooseShapeStack();
         this.arrowType = arrowType;
-        startShape = allotShapesToArrowEnds(shapeStack, x_start, y_start);
-        endShape = allotShapesToArrowEnds(shapeStack, x_end, y_end);
+        startShape = AppDisplayController.findEnclosingShape(shapeStack, x_start, y_start);
+        endShape = AppDisplayController.findEnclosingShape(shapeStack, x_end, y_end);
         System.out.println(startShape);
         System.out.println(endShape);
         //isEndShapeValid = controller.performValidityActions(startShape, endShape);
@@ -118,52 +118,5 @@ public class Link {
         return isEndShapeValid;
     }
 
-    private Shape allotShapesToArrowEnds(Stack shapeStack, int x_coord, int y_coord) {
 
-        for (Object o : shapeStack) {
-            if (o instanceof ParentRectangle) {
-                ParentRectangle rect = (ParentRectangle)o;
-                if (isInsideRectangle(x_coord, y_coord, rect)) {
-                    return rect;
-                }
-            }
-
-            if (o instanceof SoftwareComponent) {
-                SoftwareComponent t = (SoftwareComponent) o;
-                int[] x_vertices = t.getX_points();
-                int[] y_vertices = t.getY_points();
-
-                Point p0 = new Point(x_coord, y_coord);
-                Point p1 = new Point(x_vertices[0], y_vertices[0]);
-                Point p2 = new Point(x_vertices[1], y_vertices[1]);
-                Point p3 = new Point(x_vertices[2], y_vertices[2]);
-
-                if (AppDisplayController.isInsideTriangle(p1, p2, p3, p0)) {
-                    return t;
-                }
-            }
-
-            if (o instanceof ParentCircle) {
-                ParentCircle circ = (ParentCircle) o;
-                if (isInsideCircle(x_coord, y_coord, circ)) {
-                    return circ;
-                }
-            }
-        }
-        return null;
-    }
-
-    public boolean isInsideRectangle(int x_coord, int y_coord, ParentRectangle rect) {
-        return x_coord <= rect.x_clicked + rect.width &&
-                x_coord >= rect.x_clicked &&
-                y_coord >= rect.y_clicked &&
-                y_coord <= rect.y_clicked + rect.height;
-    }
-
-    public boolean isInsideCircle(int x_coord, int y_coord, ParentCircle circ) {
-        double distanceSquare = Math.pow(x_coord - circ.x_center,2) + Math.pow(y_coord - circ.y_center, 2);
-        double radiusSquare = Math.pow(circ.diameter / 2.0, 2);
-
-        return distanceSquare <= radiusSquare;
-    }
 }

@@ -26,6 +26,8 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 	}
 
 	private JButton pressedViewButton = null;
+
+	private JButton pressedButton = null;
 	private JScrollPane scrollPane = null;
 	ArrayList<JButton> buttonList = null;
 	private boolean isMouseClicked;
@@ -44,7 +46,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 		deploymentView.addActionListener(this);
 		mobilityActionsView.addActionListener(this);
 		eventView.addActionListener(this);
-		setPreferredSize(new Dimension(1800, 800));
+		setPreferredSize(new Dimension(9800, 800));
 		setBackground(new Color(255,182,193));
 		mainFrame.setLayout(new BorderLayout());
 		mainFrame.setTitle("ArchStar");
@@ -84,8 +86,8 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 	 * @param e the event to be processed
 	 */
 	public void actionPerformed(ActionEvent e) {
+		pressedButton = (JButton) e.getSource();
 		resetButtonColour();
-		JButton pressedButton = (JButton) e.getSource();
 		pressedButton.setBackground(Color.GRAY);
 		ArrayList<String> buttonTextList = null;
 
@@ -96,7 +98,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 			pressedViewButton = distributionView;
 			secondaryButtonPanel.removeAll();
 			//commonButtonPanel.remove(secondaryButtonPanel);
-			buttonTextList = new ArrayList<>(Arrays.asList("Node", "Component", "Interface", "Link", "Undo", "Redo",
+			buttonTextList = new ArrayList<>(Arrays.asList("Node", "Component", "Interface", "Link", "Delete Shape", "Clear Screen","Undo", "Redo",
 					"Generate XML", "Export XML", "Export Drawing"));
 		} else if (pressedButton == deploymentView) {
 			repaint();
@@ -104,7 +106,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 			pressedViewButton = deploymentView;
 			secondaryButtonPanel.removeAll();
 			buttonTextList = new ArrayList<>(Arrays.asList("Mobile Component", "Current Deployment Node", "Allowed Deployment Node",
-					"Link", "Undo", "Redo", "Generate XML", "Export XML", "Export Drawing"));
+					"Link", "Delete Shape", "Clear Screen", "Undo", "Redo", "Generate XML", "Export XML", "Export Drawing"));
 		} else if (pressedButton == mobilityActionsView) {
 			repaint();
 			this.removeAll();
@@ -112,7 +114,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 			pressedViewButton = mobilityActionsView;
 			buttonTextList = new ArrayList<String>(Arrays.asList("Mobility Actions", "Physical Mobility : After Mobility Activity",
 					"Logical Mobility : Pre-Mobility Activity", "Logical Mobility : Mobility Activity",
-					"Logical Mobility : Post-Mobility Activity", "Function", "Description","Link", "Generate XML",
+					"Logical Mobility : Post-Mobility Activity", "Function", "Description","Link", "Delete Shape", "Clear Screen", "Generate XML",
 					"Export XML", "Export Drawing"));
 		} else if (pressedButton == eventView) {
 			repaint();
@@ -120,7 +122,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 			secondaryButtonPanel.removeAll();
 			pressedViewButton = eventView;
 			buttonTextList = new ArrayList<String>(Arrays.asList("Mobility Manager", "Link", "Event" , "Description",
-					"Abstract Component", "Undo", "Redo", "Generate XML", "Export XML", "Export Drawing"));
+					"Abstract Component", "Delete Shape", "Clear Screen", "Undo", "Redo", "Generate XML", "Export XML", "Export Drawing"));
 		}
 
 		if (buttonTextList != null) {
@@ -174,6 +176,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 
 	public void mouseEntered(MouseEvent e) {
 
+
 	}
 
 	public void mouseExited(MouseEvent e) {
@@ -186,7 +189,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 
 	public void mouseDragged(MouseEvent e) {
 
-		x_clicked = e.getX();
+		/*x_clicked = e.getX();
 		y_clicked = e.getY();
         Object poly = controller.findClickedShape(x_clicked, y_clicked);
 		if (poly instanceof NodeRectangle) {
@@ -202,7 +205,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 		}
 
 		repaint();
-		SwingUtilities.updateComponentTreeUI(this);
+		SwingUtilities.updateComponentTreeUI(this);*/
 	}
 
 	public void drawShape(Graphics g, Object shape) {
@@ -529,22 +532,31 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 
 	public void resetButtonColour() {
 		Color defaultColor = new JButton().getBackground();
-		distributionView.setBackground(defaultColor);
-		deploymentView.setBackground(defaultColor);
-		mobilityActionsView.setBackground(defaultColor);
-		eventView.setBackground(defaultColor);
-		if (pressedViewButton != null) {
-			pressedViewButton.setBackground(Color.GRAY);
+		if(pressedButton != distributionView && pressedButton != deploymentView && pressedButton != eventView && pressedButton != mobilityActionsView){
+			if (buttonList != null) {
+				for (JButton button : buttonList) {
+					button.setBackground(defaultColor);
+				}
+			}
+		}else {
+			distributionView.setBackground(defaultColor);
+			deploymentView.setBackground(defaultColor);
+			mobilityActionsView.setBackground(defaultColor);
+			eventView.setBackground(defaultColor);
 		}
 
-		if (buttonList != null) {
-			for (JButton button : buttonList) {
-				button.setBackground(defaultColor);
-			}
-		}
+
 	}
 
 	public JButton getPressedViewButton() {
 		return pressedViewButton;
+	}
+
+	public void removeSwingComponents(Shape shape){
+		this.remove(shape.getShapeName());
+		for(LabelTextFieldPair pair : shape.getLabeTextAreaPairList()){
+			this.remove(pair.getLabel());
+			this.remove(pair.getTextField());
+		}
 	}
 }
