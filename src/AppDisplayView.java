@@ -10,6 +10,10 @@ import java.util.Arrays;
 */
 public class AppDisplayView extends JPanel implements ActionListener, MouseListener, MouseMotionListener {
 	private final AppDisplayController controller = new AppDisplayController(this);
+
+	private boolean isScrollPaneAdded = false;
+
+	private JScrollPane jScrollPane = null;
 	private Graphics g = null;
 	private final JFrame mainFrame = new JFrame();
 	private final JPanel commonButtonPanel = new JPanel();
@@ -62,7 +66,6 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 		mainFrame.add(commonButtonPanel, BorderLayout.NORTH);
 		mainFrame.setVisible(true);
 		//mainFrame.add(this, BorderLayout.CENTER);
-
 		scrollPane = new JScrollPane(this, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		mainFrame.add(scrollPane, BorderLayout.CENTER);
@@ -74,6 +77,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 	 * @param g the <code>Graphics</code> object to protect
 	 */
 	public void paintComponent(Graphics g) {
+		System.out.println(99999999);
 		super.paintComponent(g);
 		this.g = g;
 		controller.chooseAndIterateShapeStack(g);
@@ -434,23 +438,15 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 				DescriptionCircle circle = (DescriptionCircle) shape;
 				int x_clicked = circle.getX_clicked();
 				int y_clicked = circle.getY_clicked();
-
 				g.drawOval(x_clicked, y_clicked, circle.getDiameter(), circle.getDiameter());
-
 				JTextField shapeName = circle.getShapeName();
 				this.add(shapeName);
 				shapeName.setBounds(x_clicked + 20, y_clicked + 20, 85, 16);
 				shapeName.setBackground(new Color(255, 182, 193));
 				shapeName.setBorder(BorderFactory.createEmptyBorder());
-
-				System.out.println(34);
-
-				JTextArea descriptionField = new JTextArea(5,20);
-				//JScrollPane scrollPane = new JScrollPane(descriptionField);
-				//scrollPane.setBounds(x_clicked + 8, y_clicked + 40, 300, 55);
-
-				descriptionField.setBounds(x_clicked + 8, y_clicked + 40, 120,55);
-				this.add(descriptionField);
+				JTextArea descriptionArea = circle.getDescriptionArea();
+				descriptionArea.setBounds(x_clicked + 8, y_clicked + 40, 120,55);
+				this.add(descriptionArea);
 			} else if (shape instanceof Link) {
 				//JTextField arrowText = arrow.getArrowText();
 				//this.add(arrowText);
@@ -484,18 +480,20 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 
 
 	public void addTextAreaOnButtonPress(String xmlGenerated) {
-		xmlArea.setTabSize(2);
-		xmlArea.setText(xmlGenerated);
-
-		xmlArea.setSize(400, 800);
-		JScrollPane scrollPane = new JScrollPane(xmlArea);
-		scrollPane.setSize(400,800);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		this.add(scrollPane, BorderLayout.EAST);
-		scrollPane.setVisible(true);
-
-		//xmlArea.setBorder(BorderFactory.createLineBorder(Color.black));
-		xmlArea.setEnabled(false);
+		if(isScrollPaneAdded == false) {
+			xmlArea.setTabSize(2);
+			xmlArea.setText(xmlGenerated);
+			xmlArea.setSize(new Dimension(1800, 800));
+			jScrollPane = new JScrollPane(xmlArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			mainFrame.add(jScrollPane, BorderLayout.EAST);
+			xmlArea.setEnabled(false);
+		}
+		else {
+			mainFrame.remove(jScrollPane);
+			mainFrame.add(this, BorderLayout.CENTER);
+			isScrollPaneAdded = false;
+		}
 	}
 
 	public void addComponentsToView(ArrayList<LabelTextFieldPair> labelTextFieldPairList) {

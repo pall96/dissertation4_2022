@@ -1,4 +1,12 @@
+import javax.swing.*;
+
 public class DescriptionCircle extends ParentCircle {
+
+    private JTextArea descriptionArea = new JTextArea(5,12);
+
+    public JTextArea getDescriptionArea() {
+        return descriptionArea;
+    }
 
     public DescriptionCircle(int x_clicked, int y_clicked, int diameter){
         this.x_clicked = x_clicked;

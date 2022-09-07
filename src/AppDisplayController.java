@@ -251,9 +251,11 @@ public class AppDisplayController {
 			 //shapeStack.add(rectangle);
 		 }
 		 else if (view.getIsMouseClicked() && pressedButtonText.equals("Description")) {
-			 DescriptionCircle rectangle = new DescriptionCircle(view.getX_clicked(), view.getY_clicked(), 130);
-			 view.drawShape(g, rectangle);
-			 chooseShapeStack().add(rectangle);
+			 System.out.println(56);
+			 DescriptionCircle circle = new DescriptionCircle(view.getX_clicked(), view.getY_clicked(), 130);
+			 view.drawShape(g, circle);
+			 chooseShapeStack().add(circle);
+
 		 }
 
 		 else if (view.getIsMouseClicked() && (pressedButtonText.equals("Link") || pressedButtonText.equals("Function Call Arrow") || pressedButtonText.equals("Function Response Arrow"))) {
