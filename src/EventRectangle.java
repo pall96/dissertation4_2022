@@ -44,5 +44,6 @@ public class EventRectangle extends ParentRectangle {
         this.getLabeTextAreaPairList().addAll(Arrays.asList(name, ID));
         this.getAllowedShapeNameList().addAll(List.of("File"));
         this.setXmlTagName("event");
+        this.getShapeName().setEditable(false);
     }
 }

@@ -2,7 +2,14 @@ import javax.swing.*;
 
 public class DescriptionCircle extends ParentCircle {
 
-    private JTextArea descriptionArea = new JTextArea(5,12);
+    private JTextArea descriptionArea = new JTextArea(100,100);
+
+    private JScrollPane scrollPane = new JScrollPane(descriptionArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+    public JScrollPane getScrollPane() {
+        return scrollPane;
+    }
 
     public JTextArea getDescriptionArea() {
         return descriptionArea;
@@ -18,6 +25,7 @@ public class DescriptionCircle extends ParentCircle {
         this.getLabeTextAreaPairList().add(descriptionLabel);
         this.getShapeName().setText("Description");
         this.setXmlTagName("description");
+        this.getShapeName().setEditable(false);
     }
 
     public int calculateX_Center() {

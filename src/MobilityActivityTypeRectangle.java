@@ -39,5 +39,6 @@ public class MobilityActivityTypeRectangle extends ParentRectangle {
         this.y_clicked = y_clicked;
         this.getShapeName().setText(type);
         setXmlTagName("physicalMobility");
+        this.getShapeName().setEditable(false);
     }
 }

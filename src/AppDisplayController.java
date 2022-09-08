@@ -202,14 +202,14 @@ public class AppDisplayController {
 			 //view.add(rectangle.getUserInputText());
 			 view.drawShape(g, rectangle);
 			 distributionViewStack.add(rectangle);
-			 //shapeStack.add(rectangle);
+			 shapeStack.add(rectangle);
 
 
 		 }
 		 else if (view.getIsMouseClicked() && (pressedButtonText.equals("Component")||pressedButtonText.equals("Abstract Component"))) {
 			 SoftwareComponent triangle = new SoftwareComponent(view.getX_clicked(), view.getY_clicked(), pressedButtonText);
 			 view.drawShape(g, triangle);
-			 distributionViewStack.add(triangle);
+			 chooseShapeStack().add(triangle);
 			 //shapeStack.add(triangle);
 		 }
 

@@ -117,7 +117,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 			secondaryButtonPanel.removeAll();
 			pressedViewButton = mobilityActionsView;
 			buttonTextList = new ArrayList<String>(Arrays.asList("Mobility Actions", "Physical Mobility : After Mobility Activity",
-					"Logical Mobility : Pre-Mobility Activity", "Logical Mobility : Mobility Activity",
+					"Undo", "Logical Mobility : Pre-Mobility Activity", "Logical Mobility : Mobility Activity",
 					"Logical Mobility : Post-Mobility Activity", "Function", "Description","Link", "Delete Shape", "Clear Screen", "Generate XML",
 					"Export XML", "Export Drawing"));
 		} else if (pressedButton == eventView) {
@@ -126,7 +126,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 			secondaryButtonPanel.removeAll();
 			pressedViewButton = eventView;
 			buttonTextList = new ArrayList<String>(Arrays.asList("Mobility Manager", "Link", "Event" , "Description",
-					"Abstract Component", "Delete Shape", "Clear Screen", "Undo", "Redo", "Generate XML", "Export XML", "Export Drawing"));
+					"Component", "Delete Shape", "Clear Screen", "Undo", "Redo", "Generate XML", "Export XML", "Export Drawing"));
 		}
 
 		if (buttonTextList != null) {
@@ -222,6 +222,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 
 
 				g.drawRect(x_clicked, y_clicked, 230, 140);
+				g.drawLine(x_clicked, y_clicked + 17, x_clicked + 230, y_clicked + 17);
 				rectangle.setWidth(230);
 				rectangle.setHeight(140);
 
@@ -311,11 +312,11 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 				int x_clicked = rectangle.getX_clicked();
 				int y_clicked = rectangle.getY_clicked();
 
-				g.drawRect(x_clicked, y_clicked, 150, 80);
-				g.drawLine(x_clicked, y_clicked + 17, x_clicked + 150, y_clicked + 17);
+				g.drawRect(x_clicked, y_clicked, 170, 100);
+				g.drawLine(x_clicked, y_clicked + 17, x_clicked + 170, y_clicked + 17);
 
-				rectangle.setWidth(150);
-				rectangle.setHeight(80);
+				rectangle.setWidth(170);
+				rectangle.setHeight(100);
 
 				JTextField shapeName = rectangle.getShapeName();
 				this.add(shapeName);
@@ -326,7 +327,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 
 				ArrayList<LabelTextFieldPair> pairList = rectangle.getLabeTextAreaPairList();
 				addComponentsToView(pairList);
-				setComponentPairSize(pairList, x_clicked + 1, y_clicked + 18, 40, 100);
+				setComponentPairSize(pairList, x_clicked + 1, y_clicked + 18, 60, 100);
 				setComponentPairFormatting(pairList);
 
 			}
@@ -335,11 +336,11 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 				int x_clicked = rectangle.getX_clicked();
 				int y_clicked = rectangle.getY_clicked();
 
-				g.drawRect(x_clicked, y_clicked, 230, 40);
+				g.drawRect(x_clicked, y_clicked, 230, 80);
 				g.drawLine(x_clicked, y_clicked + 17, x_clicked + 230, y_clicked + 17);
 
 				rectangle.setWidth(150);
-				rectangle.setHeight(60);
+				rectangle.setHeight(80);
 
 				JTextField shapeName = rectangle.getShapeName();
 				this.add(shapeName);
@@ -445,8 +446,15 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 				shapeName.setBackground(new Color(255, 182, 193));
 				shapeName.setBorder(BorderFactory.createEmptyBorder());
 				JTextArea descriptionArea = circle.getDescriptionArea();
-				descriptionArea.setBounds(x_clicked + 8, y_clicked + 40, 120,55);
-				this.add(descriptionArea);
+				descriptionArea.getCaret().setVisible(true);
+				descriptionArea.requestFocus(true);
+				descriptionArea.setSize(new Dimension(500,500));
+				descriptionArea.setLineWrap(true);
+				descriptionArea.setWrapStyleWord(true);
+				descriptionArea.setBackground(new Color(255,255,255));
+				circle.getScrollPane().setBounds(x_clicked + 8, y_clicked + 40, 110, 50);
+				//descriptionArea.setCaretPosition(descriptionArea.getText().length());
+				this.add(circle.getScrollPane());
 			} else if (shape instanceof Link) {
 				//JTextField arrowText = arrow.getArrowText();
 				//this.add(arrowText);
@@ -491,7 +499,6 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 		}
 		else {
 			mainFrame.remove(jScrollPane);
-			mainFrame.add(this, BorderLayout.CENTER);
 			isScrollPaneAdded = false;
 		}
 	}
@@ -523,7 +530,7 @@ public class AppDisplayView extends JPanel implements ActionListener, MouseListe
 		for (LabelTextFieldPair pair : labelTextFieldPairList) {
 			pair.getLabel().setBackground(new Color(255,182,193));
 			pair.getLabel().setBorder(BorderFactory.createEmptyBorder());
-			pair.getTextField().setBackground(new Color(255,0,0));
+			pair.getTextField().setBackground(new Color(255,255,255));
 			pair.getTextField().setBorder(BorderFactory.createEmptyBorder());
 		}
 	}

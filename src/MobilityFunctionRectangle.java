@@ -1,8 +1,14 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class MobilityFunctionRectangle extends ParentRectangle {
     private final LabelTextFieldPair name = new LabelTextFieldPair("Function Name");
+
+    private final LabelTextFieldPair invokedBy = new LabelTextFieldPair("Invoked By");
+
+    private final LabelTextFieldPair executesOn = new LabelTextFieldPair("Executes On");
 
     public void setX_clicked(int x_clicked) {
         this.x_clicked = x_clicked;
@@ -40,8 +46,9 @@ public class MobilityFunctionRectangle extends ParentRectangle {
         this.x_clicked = x_clicked;
         this.y_clicked = y_clicked;
         this.getShapeName().setText("Mobility Function");
-        this.getLabeTextAreaPairList().addAll(Collections.singletonList(name));
+        this.getLabeTextAreaPairList().addAll(Arrays.asList(name, invokedBy, executesOn));
         this.getAllowedShapeNameList().addAll(List.of("File"));
         this.setXmlTagName("function");
+        this.getShapeName().setEditable(false);
     }
 }

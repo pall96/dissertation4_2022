@@ -45,5 +45,6 @@ public class AbstractNodeRectangle extends ParentRectangle {
         this.setXmlTagName("abstractNode");
         this.getLabeTextAreaPairList().addAll(Arrays.asList(name, ID));
         this.getAllowedShapeNameList().add("File");
+        this.getShapeName().setEditable(false);
     }
 }

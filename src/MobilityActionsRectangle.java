@@ -44,5 +44,6 @@ public class MobilityActionsRectangle extends ParentRectangle {
         this.setXmlTagName("mobilityActions");
         this.getLabeTextAreaPairList().addAll(Arrays.asList(name, ID));
         this.getAllowedShapeNameList().addAll(List.of("File"));
+        this.getShapeName().setEditable(false);
     }
 }

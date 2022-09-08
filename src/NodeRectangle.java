@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class NodeRectangle extends ParentRectangle {
 
+	private final LabelTextFieldPair nodeName = new LabelTextFieldPair("Node_Name:");
 	private final LabelTextFieldPair nodeID = new LabelTextFieldPair("Node_ID:");
 	private final LabelTextFieldPair nodeType = new LabelTextFieldPair("Node_Type:");
 	private final LabelTextFieldPair nodeIP = new LabelTextFieldPair("Node_IP");
@@ -51,8 +52,9 @@ public class NodeRectangle extends ParentRectangle {
 		this.y_clicked = y_clicked;
 		this.getShapeName().setText("Node");
 		this.setXmlTagName("Node");
-		this.getLabeTextAreaPairList().addAll(Arrays.asList(nodeID, nodeType, nodeIP, nodeLatitude, nodeLongitude));
+		this.getLabeTextAreaPairList().addAll(Arrays.asList(nodeName, nodeID, nodeType, nodeIP, nodeLatitude, nodeLongitude));
 		this.getAllowedShapeNameList().addAll(List.of("Service"));
+		this.getShapeName().setEditable(false);
 	}
 }
 

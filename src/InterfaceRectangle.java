@@ -5,6 +5,8 @@ public class InterfaceRectangle extends ParentRectangle{
     private final LabelTextFieldPair ID = new LabelTextFieldPair("ID");
     private final LabelTextFieldPair type = new LabelTextFieldPair("Type");
 
+    private final LabelTextFieldPair protocol = new LabelTextFieldPair("Protocol");
+
     public void setX_clicked(int x_clicked) {
         this.x_clicked = x_clicked;
     }
@@ -42,7 +44,8 @@ public class InterfaceRectangle extends ParentRectangle{
         this.y_clicked = y_clicked;
         this.getShapeName().setText("Interface");
         this.setXmlTagName("interfaceInstance");
-        this.getLabeTextAreaPairList().addAll(Arrays.asList(name, ID, type));
+        this.getLabeTextAreaPairList().addAll(Arrays.asList(name, ID, type, protocol));
         this.getAllowedShapeNameList().add("File");
+        this.getShapeName().setEditable(false);
     }
 }

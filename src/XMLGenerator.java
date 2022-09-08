@@ -10,7 +10,7 @@ import java.util.*;
 public class XMLGenerator {
 
     private String generatedXML;
-    private int counter = 0;
+    private int counter = 1;
     private ArrayList<String> elementOrder = new ArrayList<>();
     HashMap<Shape, ArrayList<Shape>> hashMap = new HashMap<>();
 
@@ -43,9 +43,11 @@ public class XMLGenerator {
         builder.append(element.open);
         depth++;
         for (XMLElement child : element.children) {
-            builder.append("\n").append("\t".repeat(depth)).append(generateXML(child, depth)).append("\n");
+            builder.append("\n").append("\t".repeat(depth)).append(generateXML(child, depth));
         }
-        builder.append(element.close);
+
+        builder.append("\n").append("\t".repeat(depth - counter)).append(element.close);
+        counter++;
         return builder.toString();
     }
 

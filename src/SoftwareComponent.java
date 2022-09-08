@@ -57,6 +57,7 @@ public class SoftwareComponent extends Shape {
             this.setXmlTagName("abstractComponent");
         }
         this.getAllowedShapeNameList().addAll(Arrays.asList("Dependency", "Connector"));
+        this.getShapeName().setEditable(false);
     }
 }
 

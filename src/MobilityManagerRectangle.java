@@ -46,5 +46,6 @@ public class MobilityManagerRectangle extends ParentRectangle {
         this.getShapeName().setText("Mobility Manager");
         this.getAllowedShapeNameList().addAll(Arrays.asList("SubDirectory", "File"));
         this.setXmlTagName("mobilityManager");
+        this.getShapeName().setEditable(false);
     }
 }

@@ -43,5 +43,6 @@ public class MobileComponentRectangle extends ParentRectangle{
         this.getShapeName().setText("Mobile Component");
         this.setXmlTagName("mobileComponent");
         this.getAllowedShapeNameList().addAll(Arrays.asList("SubDirectory", "File"));
+        this.getShapeName().setEditable(false);
     }
 }
